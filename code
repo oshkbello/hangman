@@ -48,6 +48,14 @@ def play_loop():
 		print('Thanks for Playing. Come back next time!')
 		exit()
 
+#check for character in multiple positions
+def charposition(string, char):
+    pos = [] #list to store positions for each 'char' in 'string'
+    for n in range(len(string)):
+        if string[n] == char:
+            pos.append(n)
+    return pos
+
 def hangman():
 	global count
 	global display
@@ -62,12 +70,22 @@ def hangman():
 		hangman()
 	elif guess in word:
 		already_guessed.extend([guess])
-		index = word.find(guess)
-		word = word[:index] + '_' + word[index + 1:]
-		display = display[:index] + guess + display[index + 1:]
+		#this check how many times the character entered occured in the hangman word
+		posit = charposition(word, guess)
+		if len(posit) > 1:
+			for x in range(len(posit)):
+				word = word[:posit[x]] + '_' + word[posit[x] + 1:]
+				display = display[:posit[x]] + guess + display[posit[x] + 1:]
+		else:
+			index = word.find(guess)
+			word = word[:index] + '_' + word[index + 1:]
+			display = display[:index] + guess + display[index + 1:]
+		#index = word.find(guess)
+		#word = word[:index] + '_' + word[index + 1:]
+		#display = display[:index] + guess + display[index + 1:]
 		print(display + '\n')
 	elif guess in already_guessed:
-		print('Try another letter. \n')
+		print('Letter already guessed. Try another letter. \n')
 	else:
 		count += 1
 		if count == 1:
